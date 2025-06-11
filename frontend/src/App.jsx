@@ -11,38 +11,35 @@ import CreatePoll from "./pages/Dashboard/CreatePoll";
 import MyPolls from "./pages/Dashboard/MyPolls";
 import VotedPolls from "./pages/Dashboard/VotedPolls";
 import Bookmarks from "./pages/Dashboard/Bookmarks";
+import Home from "./pages/Dashboard/Home";
+
+// Define the Root component to handle the initial redirect
+const Root = () => {
+  const isAuthenticated = !!localStorage.getItem("token");
+  return isAuthenticated ? (
+    <Navigate to="/dashboard" replace />
+  ) : (
+    <Navigate to="/login" replace />
+  );
+};
 
 const App = () => {
   return (
-    <div>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Root />} />
-          <Route path="/login" exact element={<LoginForm />} />
-          <Route path="/signup" exact element={<SignUpForm />} />
-          <Route path="/dashboard" exact element={<Home />} />
-          <Route path="/create-poll" exact element={<CreatePoll />} />
-          <Route path="/my-poll" exact element={<MyPolls />} />
-          <Route path="/voted-poll" exact element={<VotedPolls />} />
-          <Route path="/bookmarked-polls" exact element={<Bookmarks />} />
-        </Routes>
-      </Router>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Root />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/signup" element={<SignUpForm />} />
+        <Route path="/dashboard" element={<Home />} />
+        <Route path="/create-poll" element={<CreatePoll />} />
+        <Route path="/my-polls" element={<MyPolls />} />
+        <Route path="/voted-polls" element={<VotedPolls />} />
+        <Route path="/bookmarked-polls" element={<Bookmarks />} />
+        {/* 404 Not Found Route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
 };
 
 export default App;
-
-//Define the Root component to handle the intial redirect
-const Root = () => {
-  //Check if token exists in localStorage
-  const isAuthenticated = !!localStorage.getItem("token");
-
-  //Redirect to dashboard if authenticated, otherwise to login
-
-  return isAuthenticated ? (
-    <Navigate to="/dashboard" />
-  ) : (
-    <Navigate to="/login" />
-  );
-};
