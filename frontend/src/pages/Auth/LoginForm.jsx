@@ -3,12 +3,17 @@ import AuthLayout from "../../components/layout/AuthLayout";
 import { Link, useNavigate } from "react-router-dom";
 import AuthInput from "../../components/input/AuthInput";
 import { validateEmail } from "../../utils/helper";
+import axiosInstance from "../../utils/axios";
+import { API_PATHS } from "../../utils/api-services";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
+  const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   //Handle Login Form Submit
@@ -26,7 +31,24 @@ const LoginForm = () => {
     setError("");
     //Login API
     try {
-    } catch (error) {}
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        email,
+        password,
+      });
+      const { token, user } = response.data;
+      if (token) {
+        localStorage.setItem("token", token);
+        updateUser(user);
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("Something Went Wrong");
+      }
+    }
   };
 
   return (

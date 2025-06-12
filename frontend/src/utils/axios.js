@@ -26,24 +26,32 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-//Response Interceptor
+// Response Interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
-    //Handle common errors globally
     if (error.response) {
-      if (error.response.status === 401) {
-        // Handle unauthorized access (e.g., redirect to login)
-        console.error("Unauthorized! Redirect to login or refresh token.");
+      const { status } = error.response;
+
+      if (status === 401) {
+        console.error("Unauthorized! Redirect to login.");
         window.location.href = "/login";
+      } else if (status === 500) {
+        console.error("Internal Server Error");
+      } else {
+        console.error(
+          "API Error:",
+          error.response.data?.message || "Unknown error"
+        );
       }
-    } else if (error.response.status === 500) {
-      console.error("Network/Server error:", error);
     } else if (error.code === "ECONNABORTED") {
-      console.error("Network/Server error:", error);
+      console.error("Request timed out");
+    } else {
+      console.error("Network or unknown error", error.message);
     }
+
     return Promise.reject(error);
   }
 );
