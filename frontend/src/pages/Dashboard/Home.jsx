@@ -1,9 +1,10 @@
-import React from 'react'
+import React from "react";
+import DashboardLayout from "../../components/layout/DashboardLayout";
+import useUserAuth from "../../hooks/useUserAuth";
 
 const Home = () => {
-  return (
-    <div>Home</div>
-  )
-}
+  useUserAuth();
+  return <DashboardLayout activeMenu="Dashboard">Home</DashboardLayout>;
+};
 
-export default Home
+export default Home;
