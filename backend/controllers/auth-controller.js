@@ -119,4 +119,25 @@ exports.loginUser = async (req, res) => {
 };
 
 //Get User Info
-exports.getUserInfo = async (req, res) => {};
+exports.getUserInfo = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User Not Found" });
+    }
+    //Add new attributes to the response
+    const userInfo = {
+      ...user.toObject(),
+      totalPollsCreated: 0,
+      totalPollsBookmarked: 0,
+      totalPollsVotes: 0,
+    };
+
+    res.status(200).json(userInfo);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error Fetching User Info",
+      error: error.message,
+    });
+  }
+};
