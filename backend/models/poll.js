@@ -21,7 +21,7 @@ const PollSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  creator: [
+  voters: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
