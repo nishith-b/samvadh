@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import LoginForm from "./pages/Auth/LoginForm";
 import SignUpForm from "./pages/Auth/SignUpForm";
 import CreatePoll from "./pages/Dashboard/CreatePoll";
@@ -42,6 +43,14 @@ const App = () => {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>
+        <Toaster
+          toastOptions={{
+            className: "",
+            style: {
+              fontSize: "13px",
+            },
+          }}
+        />
       </UserProvider>
     </div>
   );

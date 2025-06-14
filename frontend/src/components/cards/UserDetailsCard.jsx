@@ -1,4 +1,5 @@
 import React from "react";
+import CharAvatar from "./CharAvatar";
 const StatsInfo = ({ label, value }) => {
   return (
     <div className="text-center">
@@ -20,11 +21,20 @@ const UserDetailsCard = ({
     <div className="mt-16 overflow-hidden rounded-lg bg-slate-100/50">
       <div className="relative flex justify-center w-full h-32 bg-cover bg-profile-bg--img bg-sky-500">
         <div className="absolute overflow-hidden border-2 rounded-full -bottom-10 border-primary">
-          <img
-            src={profileImageUrl || ""}
-            alt="Profile Image "
-            className="w-20 h-20 rounded-full bg-slate-400"
-          />
+          {profileImageUrl ? (
+            <img
+              src={profileImageUrl || ""}
+              alt="Profile Image "
+              className="w-20 h-20 rounded-full bg-slate-400"
+            />
+          ) : (
+            <CharAvatar
+              fullName={fullName}
+              width="w-20"
+              height="h-20"
+              style="text-xl"
+            />
+          )}
         </div>
       </div>
       <div className="px-5 mt-12">
