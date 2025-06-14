@@ -180,7 +180,44 @@ exports.getAllPolls = async (req, res) => {
 
 //Get Voted Polls
 exports.getVotedPolls = async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+  const userId = req.user._id;
   try {
+    //Calculate Pagination Parameters
+    const pageNumber = parseInt(page, 10);
+    const pageSize = parseInt(limit, 10);
+    const skip = (pageNumber - 1) * pageSize;
+
+    //Fetch Polls where user has voted
+    const polls = await Poll.find({ voters: userId }) //Filter by polls where the user's ID exists in voters
+      .populate("creator", "fullName username email profileImageUrl")
+      .populate({
+        path: "responses.voterId",
+        select: "username profileImageUrl fullName",
+      })
+      .skip(skip)
+      .limit(pageSize);
+
+    //Add 'userHasVoted' flag for each poll
+    const updatePolls = polls.map((poll) => {
+      const userHasVoted = poll.voters.some((voterId) =>
+        voterId.equals(userId)
+      );
+      return {
+        ...poll.toObject(),
+        userHasVoted,
+      };
+    });
+
+    //Get total count of voted polls for pagination metadata
+    const totalVotedPolls = await Poll.countDocuments({ voters: userId });
+
+    res.status(200).json({
+      polls: updatePolls,
+      currentPage: pageNumber,
+      totalPages: Math.ceil(totalVotedPolls / pageSize),
+      totalVotedPolls,
+    });
   } catch (error) {
     res.status(500).json({
       message: "Error Registering user",
