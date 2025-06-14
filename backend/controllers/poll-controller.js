@@ -202,10 +202,46 @@ exports.getPollById = async (req, res) => {
 
 //Vote on a Poll
 exports.voteOnPoll = async (req, res) => {
+  const { id } = req.params;
+  const { optionIndex, responseText } = req.body; //Removed Voter Id from the req.body and extracted it from req.user._id
+  voterId = req.user._id;
+
   try {
+    const poll = await Poll.findById(id);
+    if (!poll) {
+      return res.status(404).json({ message: "Poll not Found" });
+    }
+    if (poll.closed) {
+      return res.status(400).json({ message: "Poll is closed" });
+    }
+    if (poll.voters.includes(voterId)) {
+      return res
+        .status(400)
+        .json({ message: "User has already voted on this poll" });
+    }
+    if (poll.type === "open-ended") {
+      if (!responseText) {
+        return res
+          .status(400)
+          .json({ message: "Response Text is required for open-ended polls" });
+      }
+      poll.responses.push({ voterId, responseText });
+    } else {
+      if (
+        optionIndex === undefined ||
+        optionIndex < 0 ||
+        optionIndex >= poll.options.length
+      ) {
+        return res.status(400).json({ message: "Invalid Option Index" });
+      }
+      poll.options[optionIndex].votes += 1;
+    }
+    poll.voters.push(voterId);
+    await poll.save();
+    res.status(200).json(poll);
   } catch (error) {
     res.status(500).json({
-      message: "Error Registering user",
+      message: "Error Voting",
       error: error.message,
     });
   }
