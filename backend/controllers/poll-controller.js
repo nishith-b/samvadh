@@ -354,7 +354,8 @@ exports.bookmarkPoll = async (req, res) => {
     user.bookmarkedPolls.push(id);
     await user.save();
 
-    await user.populate({ // additional thing added
+    await user.populate({
+      // additional thing added
       path: "bookmarkedPolls",
       select: "question options createdAt closed",
     });
@@ -373,10 +374,39 @@ exports.bookmarkPoll = async (req, res) => {
 
 //Get all Bookmarked Polls
 exports.getBookmarkedPolls = async (req, res) => {
+  const userId = req.user.id;
+
   try {
+    const user = await User.findById(userId).populate({
+      path: "bookmarkedPolls",
+      populate: {
+        path: "creator",
+        select: "fullName username profileImageUrl",
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User Not found" });
+    }
+
+    const bookmarkedPolls = user.bookmarkedPolls;
+
+    // Add 'userHasVoted' flag for each poll
+    const updatePolls = bookmarkedPolls.map((poll) => {
+      const userHasVoted = poll.voters.some((voterId) =>
+        voterId.equals(userId)
+      );
+
+      return {
+        ...poll.toObject(),
+        userHasVoted,
+      };
+    });
+
+    res.status(200).json({ bookmarkedPolls: updatePolls });
   } catch (error) {
     res.status(500).json({
-      message: "Error Registering user",
+      message: "Error fetching bookmarked polls",
       error: error.message,
     });
   }

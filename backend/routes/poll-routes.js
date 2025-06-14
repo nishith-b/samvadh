@@ -15,7 +15,7 @@ const {
 const router = express.Router();
 
 router.post("/create", protect, createPoll);
-router.get("/getAllPolls", protect,getAllPolls);
+router.get("/getAllPolls", protect, getAllPolls);
 router.get("/votedPolls", protect, getVotedPolls);
 router.get("/:id", protect, getPollById);
 router.post("/:id/vote", protect, voteOnPoll);
