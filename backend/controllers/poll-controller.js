@@ -326,10 +326,46 @@ exports.closePoll = async (req, res) => {
 
 //Bookmark the Poll
 exports.bookmarkPoll = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user._id;
+
   try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User Not found" });
+    }
+
+    // Check if poll is already bookmarked
+    const isBookmarked = user.bookmarkedPolls.includes(id);
+
+    if (isBookmarked) {
+      // Remove poll from bookmarks
+      user.bookmarkedPolls = user.bookmarkedPolls.filter(
+        (pollId) => pollId.toString() !== id
+      );
+      await user.save();
+      return res.status(200).json({
+        message: "Poll removed from bookmarks",
+        bookmarkedPolls: user.bookmarkedPolls,
+      });
+    }
+
+    // Add poll to bookmarks
+    user.bookmarkedPolls.push(id);
+    await user.save();
+
+    await user.populate({ // additional thing added
+      path: "bookmarkedPolls",
+      select: "question options createdAt closed",
+    });
+
+    res.status(200).json({
+      message: "Poll bookmarked successfully",
+      bookmarkedPolls: user.bookmarkedPolls,
+    });
   } catch (error) {
     res.status(500).json({
-      message: "Error Registering user",
+      message: "Error updating bookmarks",
       error: error.message,
     });
   }
