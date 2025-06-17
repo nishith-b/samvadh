@@ -28,6 +28,7 @@ const MyPolls = () => {
   const [filterType, setFilterType] = useState("");
 
   const fetchAllPolls = async (overridePage = page) => {
+    
     if (loading) return;
 
     setLoading(true);
@@ -57,6 +58,7 @@ const MyPolls = () => {
   const loadMorePolls = () => {
     setPage((prevPage) => prevPage + 1);
   };
+  
   useEffect(() => {
     setPage(1);
     fetchAllPolls(1);
@@ -69,6 +71,13 @@ const MyPolls = () => {
     }
     return () => {};
   }, [page]);
+
+ useEffect(() => {
+  if (!user || !user._id) return; // Wait until user is available
+  setPage(1);
+  fetchAllPolls(1);
+}, [filterType, user]);
+
 
   return (
     <DashboardLayout activeMenu="My Polls">
@@ -89,6 +98,7 @@ const MyPolls = () => {
         )}
         <InfiniteScroll
           dataLength={allPolls.length}
+          next={loadMorePolls}
           hasMore={hasMore}
           loader={<h4 className="info-text">Loading...</h4>}
           endMessage={<p className="info-text">No more polls to display...</p>}
@@ -107,7 +117,8 @@ const MyPolls = () => {
               creatorUsername={poll.creator.username}
               userHasVoted={poll.userHasVoted || false}
               isPollClosed={poll.closed || false}
-              isMyPoll={poll.isMyPoll || false}
+              //isMyPoll={poll.isMyPoll || false}
+              isMyPoll
               createdAt={poll.createdAt || false}
             />
           ))}

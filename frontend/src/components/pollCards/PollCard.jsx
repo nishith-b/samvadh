@@ -111,6 +111,20 @@ const PollCard = ({
     }
   };
 
+  //Close Poll
+  const closePoll = async () => {
+    try {
+      const response = await axiosInstance.post(API_PATHS.POLLS.CLOSE(pollId));
+      if (response.data) {
+        setPollClosed(true);
+        toast.success(response.data?.message || "Poll Closed Successfully");
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+      console.log("Something went wrong! Please try again", error);
+    }
+  };
+
   return (
     <div className="p-5 mx-auto my-5 border rounded-lg bg-slate-100/50 border-slate-100">
       <div className="flex items-start justify-between ">
@@ -131,7 +145,7 @@ const PollCard = ({
           isMyPoll={isMyPoll}
           pollClosed={pollClosed}
           onDelete={() => {}}
-          onClosePoll={() => {}}
+          onClosePoll={closePoll}
         />
       </div>
       <div className="mt-3 ml-14">

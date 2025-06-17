@@ -39,6 +39,7 @@ const Home = () => {
             ? response.data.polls
             : [...prevPolls, ...response.data.polls]
         );
+        console.log(response.data);
         setStats(response.data?.stats || []);
         setHasMore(response.data.polls.length === PAGE_SIZE);
       } else {
@@ -66,7 +67,6 @@ const Home = () => {
     }
     return () => {};
   }, [page]);
-
   return (
     <DashboardLayout activeMenu="Dashboard">
       <div className="mx-auto my-5">
@@ -87,6 +87,7 @@ const Home = () => {
 
         <InfiniteScroll
           dataLength={allPolls.length}
+          next={loadMorePolls}
           hasMore={hasMore}
           loader={<h4 className="info-text">Loading...</h4>}
           endMessage={<p className="info-text">No more polls to display...</p>}
