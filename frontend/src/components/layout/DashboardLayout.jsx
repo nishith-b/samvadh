@@ -7,6 +7,8 @@ import UserDetailsCard from "../cards/UserDetailsCard";
 const DashboardLayout = ({ children, activeMenu }) => {
   const { user } = useContext(UserContext);
 
+  console.log(user);
+
   // Optionally, you can display a loading UI if user is undefined
   if (user === undefined) {
     return null; // or a <Loader /> if you have one
@@ -26,7 +28,7 @@ const DashboardLayout = ({ children, activeMenu }) => {
               profileImageUrl={user.profileImageUrl}
               fullName={user.fullName}
               username={user.username}
-              totalPollsVotes={user.totalPollsVotes}
+              totalPollsVoted={user.totalPollsVoted}
               totalPollsCreated={user.totalPollsCreated}
               totalPollsBookmarked={user.totalPollsBookmarked}
             />
