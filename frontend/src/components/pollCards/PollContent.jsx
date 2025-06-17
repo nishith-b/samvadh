@@ -1,7 +1,7 @@
 import React from "react";
 import OptionInputTile from "../input/OptionInputTile";
 import Rating from "../input/Rating";
-import ImageOptionInputTile from "../input/ImageOptionInputTile"
+import ImageOptionInputTile from "../input/ImageOptionInputTile";
 
 const PollContent = ({
   type,

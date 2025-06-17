@@ -7,6 +7,7 @@ import PollContent from "./PollContent";
 import axiosInstance from "../../utils/axios";
 import { API_PATHS } from "../../utils/api-services";
 import { toast } from "react-hot-toast";
+import { MdApi } from "react-icons/md";
 
 const PollCard = ({
   pollId,
@@ -23,7 +24,7 @@ const PollCard = ({
   isPollClosed,
   createdAt,
 }) => {
-  const { user, onUserVoted } = useContext(UserContext);
+  const { user, onUserVoted,toggleBookmarkId } = useContext(UserContext);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(-1);
   const [rating, setRating] = useState(0);
   const [userResponse, setUserResponse] = useState("");
@@ -64,7 +65,7 @@ const PollCard = ({
       const response = await axiosInstance.get(
         API_PATHS.POLLS.GET_BY_ID(pollId)
       );
-  
+
       if (response.data) {
         const pollDetails = response.data;
         setPollResult({
@@ -95,6 +96,21 @@ const PollCard = ({
     }
   };
 
+  //Toggle the bookmark status of the poll
+  const toggleBookmark = async () => {
+    try {
+      const response = await axiosInstance.post(
+        API_PATHS.POLLS.BOOKMARK(pollId)
+      );
+
+      toggleBookmarkId(pollId);
+      setPollBookmarked((prev) => !prev);
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error(error.response?.data?.message || "Error Bookmarking Poll");
+    }
+  };
+
   return (
     <div className="p-5 mx-auto my-5 border rounded-lg bg-slate-100/50 border-slate-100">
       <div className="flex items-start justify-between ">
@@ -111,7 +127,7 @@ const PollCard = ({
           inputCaptured={!!(userResponse || selectedOptionIndex >= 0 || rating)}
           onVoteSubmit={handleVoteSubmit}
           isBookmarked={pollBookmarked}
-          toggleBookmark={() => {}}
+          toggleBookmark={toggleBookmark}
           isMyPoll={isMyPoll}
           pollClosed={pollClosed}
           onDelete={() => {}}
