@@ -24,7 +24,8 @@ const PollCard = ({
   isPollClosed,
   createdAt,
 }) => {
-  const { user, onUserVoted, toggleBookmarkId } = useContext(UserContext);
+  const { user, onUserVoted, toggleBookmarkId, onPollCreatedOrDelete } =
+    useContext(UserContext);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(-1);
   const [rating, setRating] = useState(0);
   const [userResponse, setUserResponse] = useState("");
@@ -125,6 +126,21 @@ const PollCard = ({
     }
   };
 
+  //Delete Poll
+  const deletePoll = async () => {
+    try {
+      const response = await axiosInstance.delete(API_PATHS.POLLS.DELETE(pollId));
+      if (response.data) {
+        setPollDeleted(true);
+        onPollCreatedOrDelete();
+        toast.success(response.data?.message || "Poll Deleted Successfully");
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+      console.log("Something went wrong! Please try again", error);
+    }
+  };
+
   return (
     <div className="p-5 mx-auto my-5 border rounded-lg bg-slate-100/50 border-slate-100">
       <div className="flex items-start justify-between ">
@@ -144,7 +160,7 @@ const PollCard = ({
           toggleBookmark={toggleBookmark}
           isMyPoll={isMyPoll}
           pollClosed={pollClosed}
-          onDelete={() => {}}
+          onDelete={deletePoll}
           onClosePoll={closePoll}
         />
       </div>
