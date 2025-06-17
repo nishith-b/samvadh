@@ -129,7 +129,9 @@ const PollCard = ({
   //Delete Poll
   const deletePoll = async () => {
     try {
-      const response = await axiosInstance.delete(API_PATHS.POLLS.DELETE(pollId));
+      const response = await axiosInstance.delete(
+        API_PATHS.POLLS.DELETE(pollId)
+      );
       if (response.data) {
         setPollDeleted(true);
         onPollCreatedOrDelete();

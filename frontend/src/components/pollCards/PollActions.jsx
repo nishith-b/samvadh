@@ -48,7 +48,7 @@ const PollActions = ({
           Delete
         </button>
       )}
-      
+
       <button className="icon-btn" onClick={toggleBookmark}>
         {isBookmarked ? (
           <FaBookmark className="text-primary" />

@@ -2,15 +2,11 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import useUserAuth from "../../hooks/useUserAuth";
 import { useNavigate } from "react-router-dom";
-import HeaderWithFilter from "../../components/layout/HeaderWithFilter";
 import axiosInstance from "../../utils/axios";
 import { API_PATHS } from "../../utils/api-services";
 import PollCard from "../../components/pollCards/PollCard";
-import InfiniteScroll from "react-infinite-scroll-component";
 import CREATE_ICON from "../../assets/images/my-poll-icon.png";
 import EmptyCard from "../../components/cards/EmptyCard";
-
-const PAGE_SIZE = 10;
 
 const VotedPolls = () => {
   useUserAuth();
@@ -18,8 +14,6 @@ const VotedPolls = () => {
   const navigate = useNavigate();
 
   const [votedPolls, setVotedPolls] = useState([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const fetchAllPolls = async () => {
@@ -36,10 +30,6 @@ const VotedPolls = () => {
           );
           return [...prevPolls, ...newPolls];
         });
-
-        setHasMore(response.data.polls.length === PAGE_SIZE);
-      } else {
-        setHasMore(false);
       }
     } catch (error) {
       console.log("Something went wrong.Please try again!", error);
@@ -48,14 +38,10 @@ const VotedPolls = () => {
     }
   };
 
-  const loadMorePolls = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
-
   useEffect(() => {
     fetchAllPolls();
     return () => {};
-  }, [page]);
+  }, []);
   return (
     <DashboardLayout activeMenu="Voted Polls">
       <div className="mx-auto my-5">
@@ -70,32 +56,24 @@ const VotedPolls = () => {
           />
         )}
 
-        <InfiniteScroll
-          dataLength={votedPolls.length}
-          next={loadMorePolls}
-          hasMore={hasMore}
-          loader={<h4 className="info-text">Loading...</h4>}
-          endMessage={<p className="info-text">No more polls to display...</p>}
-        >
-          {votedPolls.map((poll) => (
-            <PollCard
-              key={`dashboard_${poll._id}`}
-              pollId={poll._id}
-              question={poll.question}
-              type={poll.type}
-              options={poll.options}
-              voters={poll.voters.length || 0}
-              responses={poll.responses || []}
-              creatorProfileImg={poll.creator.profileImageUrl || null}
-              creatorName={poll.creator.fullName}
-              creatorUsername={poll.creator.username}
-              userHasVoted={poll.userHasVoted || false}
-              isPollClosed={poll.closed || false}
-              isMyPoll={poll.isMyPoll || false}
-              createdAt={poll.createdAt || false}
-            />
-          ))}
-        </InfiniteScroll>
+        {votedPolls.map((poll) => (
+          <PollCard
+            key={`dashboard_${poll._id}`}
+            pollId={poll._id}
+            question={poll.question}
+            type={poll.type}
+            options={poll.options}
+            voters={poll.voters.length || 0}
+            responses={poll.responses || []}
+            creatorProfileImg={poll.creator.profileImageUrl || null}
+            creatorName={poll.creator.fullName}
+            creatorUsername={poll.creator.username}
+            userHasVoted={poll.userHasVoted || false}
+            isPollClosed={poll.closed || false}
+            isMyPoll={poll.isMyPoll || false}
+            createdAt={poll.createdAt || false}
+          />
+        ))}
       </div>
     </DashboardLayout>
   );
