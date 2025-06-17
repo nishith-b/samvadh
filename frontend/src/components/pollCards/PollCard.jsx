@@ -7,7 +7,7 @@ import PollContent from "./PollContent";
 import axiosInstance from "../../utils/axios";
 import { API_PATHS } from "../../utils/api-services";
 import { toast } from "react-hot-toast";
-import { MdApi } from "react-icons/md";
+import PollingResultContent from "./PollingResultContent";
 
 const PollCard = ({
   pollId,
@@ -24,7 +24,7 @@ const PollCard = ({
   isPollClosed,
   createdAt,
 }) => {
-  const { user, onUserVoted,toggleBookmarkId } = useContext(UserContext);
+  const { user, onUserVoted, toggleBookmarkId } = useContext(UserContext);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(-1);
   const [rating, setRating] = useState(0);
   const [userResponse, setUserResponse] = useState("");
@@ -138,7 +138,12 @@ const PollCard = ({
         <p className="text-[15px] text-black leading-8">{question}</p>
         <div className="mt-4">
           {isVoteComplete || isPollClosed ? (
-            <>Show Result</>
+            <PollingResultContent
+              type={type}
+              options={pollResult.options || []}
+              voters={pollResult.voters}
+              responses={pollResult.responses || []}
+            />
           ) : (
             <PollContent
               type={type}

@@ -6,9 +6,6 @@ import UserDetailsCard from "../cards/UserDetailsCard";
 
 const DashboardLayout = ({ children, activeMenu }) => {
   const { user } = useContext(UserContext);
-
-  console.log(user);
-
   // Optionally, you can display a loading UI if user is undefined
   if (user === undefined) {
     return null; // or a <Loader /> if you have one
