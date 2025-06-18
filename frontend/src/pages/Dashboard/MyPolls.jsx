@@ -61,6 +61,8 @@ const MyPolls = () => {
   useEffect(() => {
     setPage(1);
     fetchAllPolls(1);
+    setAllPolls([]);
+    setHasMore(true);
     return () => {};
   }, [filterType]);
 
@@ -89,9 +91,20 @@ const MyPolls = () => {
         {allPolls.length === 0 && !loading && (
           <EmptyCard
             imgSrc={CREATE_ICON}
-            message="Welcome! You are the first user of the system,and there is no polls yet,Start by creating the first poll"
-            onClick={() => navigate("/create-poll")}
-            btnText="Create Poll"
+            message={
+              filterType !== ""
+                ? `No '${filterType.replace(
+                    "-",
+                    " "
+                  )}' polls available right now.`
+                : "Welcome! You are the first user of the system, and there are no polls yet. Start by creating the first poll."
+            }
+            onClick={() => {
+              if (filterType !== "")
+                setFilterType(""); // Clear filter if active
+              else navigate("/create-poll"); // Otherwise, navigate to create page
+            }}
+            btnText={filterType !== "" ? "Clear Filter" : "Create Poll"}
           />
         )}
         <InfiniteScroll
