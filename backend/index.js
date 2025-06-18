@@ -5,12 +5,15 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth-routes");
 const pollRoutes = require("./routes/poll-routes");
 const path = require("path");
+const helmet = require("helmet");
 
 const app = express();
 
+app.use(helmet());
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
