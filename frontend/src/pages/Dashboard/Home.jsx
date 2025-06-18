@@ -39,7 +39,6 @@ const Home = () => {
             ? response.data.polls
             : [...prevPolls, ...response.data.polls]
         );
-        console.log(response.data);
         setStats(response.data?.stats || []);
         setHasMore(response.data.polls.length === PAGE_SIZE);
       } else {
@@ -68,7 +67,7 @@ const Home = () => {
     return () => {};
   }, [page]);
   return (
-    <DashboardLayout activeMenu="Dashboard">
+    <DashboardLayout activeMenu="Dashboard" stats={stats || []} showStats>
       <div className="mx-auto my-5">
         <HeaderWithFilter
           title="Polls"

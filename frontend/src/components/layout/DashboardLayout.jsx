@@ -3,8 +3,9 @@ import Navbar from "./Navbar";
 import SideMenu from "./SideMenu";
 import { UserContext } from "../../context/UserContext";
 import UserDetailsCard from "../cards/UserDetailsCard";
+import TrendingPolls from "./TrendingPolls";
 
-const DashboardLayout = ({ children, activeMenu }) => {
+const DashboardLayout = ({ children, activeMenu, stats, showStats }) => {
   const { user } = useContext(UserContext);
   // Optionally, you can display a loading UI if user is undefined
   if (user === undefined) {
@@ -29,6 +30,7 @@ const DashboardLayout = ({ children, activeMenu }) => {
               totalPollsCreated={user.totalPollsCreated}
               totalPollsBookmarked={user.totalPollsBookmarked}
             />
+            {showStats && stats?.length > 0 && <TrendingPolls stats={stats} />}
           </div>
         </div>
       )}

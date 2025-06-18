@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axios";
 import { API_PATHS } from "../../utils/api-services";
 import PollCard from "../../components/pollCards/PollCard";
-import CREATE_ICON from "../../assets/images/my-poll-icon.png";
+import VOTED_ICON from "../../assets/images/voted-icon.png";
 import EmptyCard from "../../components/cards/EmptyCard";
 
 const VotedPolls = () => {
@@ -49,7 +49,7 @@ const VotedPolls = () => {
 
         {votedPolls.length === 0 && !loading && (
           <EmptyCard
-            imgSrc={CREATE_ICON}
+            imgSrc={VOTED_ICON}
             message="You Have Not Voted On Any Polls Yet. Start Exploring ..."
             onClick={() => navigate("/dashboard")}
             btnText="Explore"

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axios";
 import { API_PATHS } from "../../utils/api-services";
 import PollCard from "../../components/pollCards/PollCard";
-import CREATE_ICON from "../../assets/images/my-poll-icon.png";
+import BOOKMARK_ICON from "../../assets/images/bookmark-icon.png";
 import EmptyCard from "../../components/cards/EmptyCard";
 import { UserContext } from "../../context/UserContext";
 
@@ -56,7 +56,7 @@ const Bookmarks = () => {
 
         {!loading && filteredPolls.length === 0 && (
           <EmptyCard
-            imgSrc={CREATE_ICON}
+            imgSrc={BOOKMARK_ICON}
             message="You Don't Have Any Bookmarks. Start Exploring ..."
             onClick={() => navigate("/dashboard")}
             btnText="Explore"

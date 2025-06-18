@@ -28,7 +28,6 @@ const MyPolls = () => {
   const [filterType, setFilterType] = useState("");
 
   const fetchAllPolls = async (overridePage = page) => {
-    
     if (loading) return;
 
     setLoading(true);
@@ -58,7 +57,7 @@ const MyPolls = () => {
   const loadMorePolls = () => {
     setPage((prevPage) => prevPage + 1);
   };
-  
+
   useEffect(() => {
     setPage(1);
     fetchAllPolls(1);
@@ -72,12 +71,11 @@ const MyPolls = () => {
     return () => {};
   }, [page]);
 
- useEffect(() => {
-  if (!user || !user._id) return; // Wait until user is available
-  setPage(1);
-  fetchAllPolls(1);
-}, [filterType, user]);
-
+  useEffect(() => {
+    if (!user || !user._id) return;
+    setPage(1);
+    fetchAllPolls(1);
+  }, [user]);
 
   return (
     <DashboardLayout activeMenu="My Polls">
